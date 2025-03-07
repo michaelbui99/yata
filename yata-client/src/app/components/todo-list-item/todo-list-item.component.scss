@@ -1,0 +1,30 @@
+.completed {
+  color: green;
+}
+
+.todo-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .todo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    p {
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      &:hover{
+        opacity: 0.5;
+      }
+    }
+    i {
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      margin-right: 0.3rem;
+      &:hover{
+        opacity: 0.5;
+      }
+    }
+  }
+}

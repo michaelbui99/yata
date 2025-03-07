@@ -1,0 +1,11 @@
+<div class="todo-container">
+  @if (todo()) {
+    <h1>{{ todo()!.title }}</h1>
+    <div class="tags">
+      @for (tag of todo()!.tags; track tag.id) {
+        <p-chip [label]="tag.name" [removable]="true" (onRemove)="onRemoveTag(tag)"></p-chip>
+      }
+    </div>
+    <p>{{ todo()!.description }}</p>
+  }
+</div>

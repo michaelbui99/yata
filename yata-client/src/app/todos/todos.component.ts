@@ -4,10 +4,13 @@ import {FoldersService} from '../services/folders.service';
 import {Todo} from '../models/todo';
 import {firstValueFrom, lastValueFrom} from 'rxjs';
 import {TodosService} from '../services/todos.service';
+import {TodoListItemComponent} from '../components/todo-list-item/todo-list-item.component';
 
 @Component({
   selector: 'yata-todos',
-  imports: [],
+  imports: [
+    TodoListItemComponent
+  ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss'
 })

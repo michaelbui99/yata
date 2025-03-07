@@ -25,16 +25,22 @@ export class TodosService {
     ]);
   }
 
-  getTodo(todoId: string): DetailedTodo {
-    return {
+  getTodo(todoId: string): Observable<DetailedTodo> {
+    return of({
       id: "test",
       title: "test",
       description: "TEST desc",
       completed: false,
       creationDate: new Date(),
-      tags: [],
+      tags: [
+        {
+          id: "t1",
+          name: "DEMETER",
+          color: "#333"
+        }
+      ],
       subTasks: [],
       timeLogged: 2000
-    }
+    })
   }
 }

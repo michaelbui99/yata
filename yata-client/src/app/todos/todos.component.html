@@ -1,4 +1,9 @@
 <div class="todos-container">
   <h1>{{ title() }}</h1>
-  <p><i class="pi pi-check-circle completed-todos-icon"></i> {{completedTodosCount()}} / {{totalTodosCount()}}</p>
+  <p class="completed-todos-count"><i class="pi pi-check-circle completed-todos-icon"></i> {{ completedTodosCount() }} / {{ totalTodosCount() }}</p>
+  <div class="todo-list">
+    @for (todo of todos(); track todo.id) {
+      <yata-todo-list-item [todo]="todo"/>
+    }
+  </div>
 </div>
