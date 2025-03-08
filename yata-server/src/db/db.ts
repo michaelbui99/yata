@@ -6,13 +6,22 @@ import * as path from 'path';
 import { Logger } from '@nestjs/common';
 
 export class Db {
+  private static instance: Db | undefined = undefined;
   private readonly logger = new Logger(Db.name);
   db: Database;
   private readonly config: YataConfig;
 
-  constructor(config: YataConfig) {
+  private constructor(config: YataConfig) {
     this.config = config;
     this.init(config);
+  }
+
+  public static get(config: YataConfig): Db {
+    if (!Db.instance) {
+      Db.instance = new Db(config);
+    }
+
+    return Db.instance;
   }
 
   private init(config: YataConfig) {
@@ -23,11 +32,12 @@ export class Db {
     }
 
     this.ensureDatabase(config)
-      .then(() => this.ensureTables().then(() => this.ensureColumns()))
+      .then(() => this.ensureTables().then(() => this.ensureColumns().then(() => this.logger.log("DB Initialized."))))
       .catch((e) => console.error(e));
   }
 
   private async ensureDatabase(config: YataConfig): Promise<any> {
+    this.logger.log('Ensuring database exists...');
     this.db = await open({
       filename: `${config.dataFolder}/yata.db`,
       mode: sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
@@ -36,6 +46,7 @@ export class Db {
   }
 
   private async ensureTables(): Promise<void> {
+    this.logger.log('Ensuring tables are created...');
     await this.db.exec(
       'CREATE TABLE IF NOT EXISTS todos (id TEXT PRIMARY KEY)',
     );
@@ -48,14 +59,15 @@ export class Db {
     );
 
     await this.db.exec(
-        'CREATE TABLE IF NOT EXISTS folder_todos (folder_id TEXT, todo_id TEXT, FOREIGN KEY (folder_id) REFERENCES folders(id), FOREIGN KEY (todo_id) REFERENCES todos(id), PRIMARY KEY (folder_id, todo_id))',
+      'CREATE TABLE IF NOT EXISTS folder_todos (folder_id TEXT, todo_id TEXT, FOREIGN KEY (folder_id) REFERENCES folders(id), FOREIGN KEY (todo_id) REFERENCES todos(id), PRIMARY KEY (folder_id, todo_id))',
     );
     await this.db.exec(
-        'CREATE TABLE IF NOT EXISTS todo_tags (todo_id TEXT, tag_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id), FOREIGN KEY (tag_id) REFERENCES tags(id), PRIMARY KEY (todo_id, tag_id))',
+      'CREATE TABLE IF NOT EXISTS todo_tags (todo_id TEXT, tag_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id), FOREIGN KEY (tag_id) REFERENCES tags(id), PRIMARY KEY (todo_id, tag_id))',
     );
   }
 
   private async ensureColumns() {
+    this.logger.log('Ensuring table columns are created...');
     await this.addColumnIdempotent('todos', 'title', () => {
       return 'ALTER TABLE todos ADD COLUMN title TEXT default null';
     });

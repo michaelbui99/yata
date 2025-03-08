@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import * as os from 'os';
-import { defaultConfig, YataConfig } from './yata-config';
+import {DEFAULT_CONFIG_PATH, defaultConfig, YataConfig} from './yata-config';
 import * as fs from 'fs';
 import * as path from 'path';
 
 @Injectable()
 export class ConfigService {
   private readonly YATA_CONFIG_ENV_VAR = 'YATA_CONFIG';
-  private readonly DEFAULT_CONFIG_PATH = `${os.homedir()}/yata/yata-config.json`;
 
   public getConfig(): YataConfig {
     const configPath =
-      process.env[this.YATA_CONFIG_ENV_VAR] ?? this.DEFAULT_CONFIG_PATH;
+      process.env[this.YATA_CONFIG_ENV_VAR] ?? DEFAULT_CONFIG_PATH;
     if (!fs.existsSync(path.resolve(configPath))) {
       return defaultConfig();
     }

@@ -8,6 +8,6 @@ export class TodosRepository {
 
   constructor(private readonly configService: ConfigService) {
     const config = this.configService.getConfig();
-    this.db = new Db(config);
+    this.db = Db.get(config);
   }
 }
