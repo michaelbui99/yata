@@ -41,10 +41,17 @@ export class Db {
     );
     await this.db.exec('CREATE TABLE IF NOT EXISTS tags (id TEXT PRIMARY KEY)');
     await this.db.exec(
-      'CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY)',
+      'CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY, todo_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id))',
     );
     await this.db.exec(
       'CREATE TABLE IF NOT EXISTS folders (id TEXT PRIMARY KEY)',
+    );
+
+    await this.db.exec(
+        'CREATE TABLE IF NOT EXISTS folder_todos (folder_id TEXT, todo_id TEXT, FOREIGN KEY (folder_id) REFERENCES folders(id), FOREIGN KEY (todo_id) REFERENCES todos(id), PRIMARY KEY (folder_id, todo_id))',
+    );
+    await this.db.exec(
+        'CREATE TABLE IF NOT EXISTS todo_tags (todo_id TEXT, tag_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id), FOREIGN KEY (tag_id) REFERENCES tags(id), PRIMARY KEY (todo_id, tag_id))',
     );
   }
 
@@ -62,7 +69,22 @@ export class Db {
       return 'ALTER TABLE todos ADD COLUMN creationDate TEXT default null';
     });
     await this.addColumnIdempotent('todos', 'timeLogged', () => {
-      return 'ALTER TABLE todos ADD COLUMN timeLogged INTEGER default null';
+      return 'ALTER TABLE todos ADD COLUMN timeLogged INTEGER default 0';
+    });
+
+    await this.addColumnIdempotent('tags', 'name', () => {
+      return 'ALTER TABLE tags ADD COLUMN name TEXT default null';
+    });
+    await this.addColumnIdempotent('tags', 'color', () => {
+      return 'ALTER TABLE color ADD COLUMN color TEXT default null';
+    });
+
+    await this.addColumnIdempotent('notes', 'contents', () => {
+      return 'ALTER TABLE notes ADD COLUMN contents TEXT default null';
+    });
+
+    await this.addColumnIdempotent('folders', 'name', () => {
+      return 'ALTER TABLE folders ADD COLUMN name TEXT default null';
     });
   }
 
