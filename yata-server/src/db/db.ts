@@ -23,7 +23,7 @@ export class Db {
     }
 
     this.ensureDatabase(config)
-      .then(() => this.ensureTables(this.db))
+      .then(() => this.ensureTables().then(() => this.ensureColumns()))
       .catch((e) => console.error(e));
   }
 
@@ -35,9 +35,49 @@ export class Db {
     });
   }
 
-  private async ensureTables(
-    db: Database<sqlite3.Database, sqlite3.Statement>,
-  ): Promise<void> {
-    await db.exec('CREATE TABLE IF NOT EXISTS tags (id TEXT PRIMARY KEY)');
+  private async ensureTables(): Promise<void> {
+    await this.db.exec(
+      'CREATE TABLE IF NOT EXISTS todos (id TEXT PRIMARY KEY)',
+    );
+    await this.db.exec('CREATE TABLE IF NOT EXISTS tags (id TEXT PRIMARY KEY)');
+    await this.db.exec(
+      'CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY)',
+    );
+    await this.db.exec(
+      'CREATE TABLE IF NOT EXISTS folders (id TEXT PRIMARY KEY)',
+    );
+  }
+
+  private async ensureColumns() {
+    await this.addColumnIdempotent('todos', 'title', () => {
+      return 'ALTER TABLE todos ADD COLUMN title TEXT default null';
+    });
+    await this.addColumnIdempotent('todos', 'description', () => {
+      return 'ALTER TABLE todos ADD COLUMN description TEXT default null';
+    });
+    await this.addColumnIdempotent('todos', 'completed', () => {
+      return 'ALTER TABLE todos ADD COLUMN completed BOOLEAN default false';
+    });
+    await this.addColumnIdempotent('todos', 'creationDate', () => {
+      return 'ALTER TABLE todos ADD COLUMN creationDate TEXT default null';
+    });
+    await this.addColumnIdempotent('todos', 'timeLogged', () => {
+      return 'ALTER TABLE todos ADD COLUMN timeLogged INTEGER default null';
+    });
+  }
+
+  private async addColumnIdempotent(
+    tableName: string,
+    columnName: string,
+    statementSupplier: () => string,
+  ) {
+    try {
+      await this.db.exec(statementSupplier());
+    } catch (e) {
+      this.logger.log(
+        `Column '${columnName}' already exists for table '${tableName}'.`,
+        e,
+      );
+    }
   }
 }
