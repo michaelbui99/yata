@@ -7,7 +7,7 @@ import { Logger } from '@nestjs/common';
 
 export class Db {
   private readonly logger = new Logger(Db.name);
-  db: Database<sqlite3.Database, sqlite3.Statement>;
+  db: Database;
   private readonly config: YataConfig;
 
   constructor(config: YataConfig) {
@@ -73,10 +73,10 @@ export class Db {
   ) {
     try {
       await this.db.exec(statementSupplier());
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       this.logger.log(
         `Column '${columnName}' already exists for table '${tableName}'.`,
-        e,
       );
     }
   }
