@@ -1,10 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { TodosRepository } from '../../repositories/todos';
 import { Todo } from '../../models/todo';
+import { TodosService } from '../../services/todos/todos.service';
 
 @Controller('todos')
 export class TodosController {
-  constructor(private readonly todosRepository: TodosRepository) {}
+  constructor(private readonly todosService: TodosService) {}
 
   @Get()
   getAll(): Todo[] {

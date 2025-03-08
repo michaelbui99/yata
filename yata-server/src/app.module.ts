@@ -3,6 +3,7 @@ import { TodosController } from './controllers/todos/todos.controller';
 import { ConfigService } from './config/config.service';
 import { TodosRepository } from './repositories/todos';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TodosService } from './services/todos/todos.service';
 
 import * as path from 'path';
 
@@ -13,6 +14,6 @@ import * as path from 'path';
     }),
   ],
   controllers: [TodosController],
-  providers: [ConfigService, TodosRepository],
+  providers: [ConfigService, TodosRepository, TodosService],
 })
 export class AppModule {}
