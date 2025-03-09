@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject, switchMap} from 'rxjs';
 import {Folder} from '../models/folder';
+import {HttpClient} from '@angular/common/http';
+import {ConfigService} from './config.service';
+import {Todo} from '../models/todo';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +11,7 @@ import {Folder} from '../models/folder';
 export class FoldersService {
   private folders: Folder[] = [];
 
-  constructor() {
+  constructor(private readonly configService: ConfigService, private readonly httpClient: HttpClient) {
   }
 
   getFolder(folderId: string): Observable<Folder | undefined> {
@@ -23,18 +26,11 @@ export class FoldersService {
   }
 
   private refreshFolders(): Observable<Folder[]> {
-    this.folders = [
-      {
-        id: "today",
-        name: "Today",
-        todos: []
-      },
-      {
-        id: "TEST",
-        name: "DEMETER",
-        todos: []
-      }
-    ];
-    return of(this.folders);
+    return this.configService.getConfig().pipe(
+      switchMap(config => {
+        const url = `${config.serverUrl}/api/v1/folders`;
+        return this.httpClient.get<Folder[]>(url);
+      })
+    );
   }
 }
