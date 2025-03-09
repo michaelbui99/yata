@@ -8,7 +8,7 @@ import { FoldersService } from './services/folders/folders.service';
 import { FoldersController } from './controllers/folders/folders.controller';
 
 import * as path from 'path';
-import {FoldersRepository} from "./repositories/folders";
+import { FoldersRepository } from './repositories/folders';
 
 @Module({
   imports: [
@@ -17,6 +17,12 @@ import {FoldersRepository} from "./repositories/folders";
     }),
   ],
   controllers: [TodosController, FoldersController],
-  providers: [ConfigService, TodosRepository, TodosService, FoldersService, FoldersRepository],
+  providers: [
+    ConfigService,
+    TodosRepository,
+    TodosService,
+    FoldersService,
+    FoldersRepository,
+  ],
 })
 export class AppModule {}

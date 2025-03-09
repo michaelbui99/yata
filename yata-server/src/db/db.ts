@@ -6,14 +6,15 @@ import * as path from 'path';
 import { Logger } from '@nestjs/common';
 
 export class Db {
+  db: Database;
+
   private static instance: Db | undefined = undefined;
   private readonly logger = new Logger(Db.name);
-  db: Database;
   private readonly config: YataConfig;
 
   private constructor(config: YataConfig) {
     this.config = config;
-    this.init(config);
+    this.init();
   }
 
   public static get(config: YataConfig): Db {
@@ -24,15 +25,19 @@ export class Db {
     return Db.instance;
   }
 
-  private init(config: YataConfig) {
+  private init() {
     this.logger.log('Initializing DB');
-    if (!fs.existsSync(path.resolve(config.dataFolder))) {
+    if (!fs.existsSync(path.resolve(this.config.dataFolder))) {
       this.logger.log('Creating data folder...');
-      fs.mkdirSync(path.resolve(config.dataFolder));
+      fs.mkdirSync(path.resolve(this.config.dataFolder));
     }
 
-    this.ensureDatabase(config)
-      .then(() => this.ensureTables().then(() => this.ensureColumns().then(() => this.logger.log("DB Initialized."))))
+    this.ensureDatabase(this.config)
+      .then(() =>
+        this.ensureTables().then(() =>
+          this.ensureColumns().then(() => this.logger.log('DB Initialized.')),
+        ),
+      )
       .catch((e) => console.error(e));
   }
 
