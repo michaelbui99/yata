@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TodosRepository } from '../../repositories/todos';
-import { Todo } from '../../models/todo';
+import { DetailedTodo, Todo } from '../../models/todo';
+import { Optional } from '../../optional';
 
 @Injectable()
 export class TodosService {
@@ -8,5 +9,9 @@ export class TodosService {
 
   async getAll(): Promise<Todo[]> {
     return this.todosRepository.getAllTodos();
+  }
+
+  async getById(todoId: string): Promise<Optional<DetailedTodo>> {
+    return this.todosRepository.getById(todoId);
   }
 }

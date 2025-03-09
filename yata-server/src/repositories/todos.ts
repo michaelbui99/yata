@@ -3,7 +3,8 @@ import { ConfigService } from '../config/config.service';
 import { Db } from '../db/db';
 import { Uuid } from '../models/uuid';
 import { Optional } from '../optional';
-import { DetailedTodo } from '../models/todo';
+import { DetailedTodo, Todo } from '../models/todo';
+import { Tag } from '../models/tag';
 
 @Injectable()
 export class TodosRepository {
@@ -31,13 +32,37 @@ export class TodosRepository {
     return Optional.of(result.lastID);
   }
 
-  async getAllTodos(): Promise<DetailedTodo[]> {
+  async getAllTodos(): Promise<Todo[]> {
     const todoResults = await this.db.db.all(
-      'SELECT id, title, description, completed, creationDate, timeLogged FROM todos',
+      'SELECT id, title,  completed FROM todos',
     );
 
-    // TODO: Fetch tags and notes
+    return todoResults as Todo[];
+  }
 
-    return todoResults as DetailedTodo[];
+  async getById(todoId: string): Promise<Optional<DetailedTodo>> {
+    const todoResult = await this.db.db.get<TodoById>(
+      'SELECT id, title, description, completed, creationDate, timeLogged FROM todos WHERE id = :todoId',
+      {
+        ':todoId': todoId,
+      },
+    );
+    if (!todoResult) {
+      return Optional.empty();
+    }
+
+    // TODO: Fetch tags and notes, include in return.
+    todoResult['tags'] = [];
+    todoResult['subTasks'] = [];
+    return Optional.of(todoResult as unknown as DetailedTodo);
   }
 }
+
+type TodoById = {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  creationDate: string;
+  timeLogged: number;
+};
