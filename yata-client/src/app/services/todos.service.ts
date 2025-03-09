@@ -1,28 +1,24 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable, of, switchMap} from 'rxjs';
 import {DetailedTodo, Todo} from '../models/todo';
+import {ConfigService} from './config.service';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodosService {
 
-  constructor() {
+  constructor(private readonly configService: ConfigService, private readonly httpClient: HttpClient) {
   }
 
   getTodos(folder?: string, tag?: string): Observable<Todo[]> {
-    return of([
-      {
-        id: "1",
-        title: "todo1",
-        completed: true
-      },
-      {
-        id: "2",
-        title: "todo2",
-        completed: false
-      },
-    ]);
+    return this.configService.getConfig().pipe(
+      switchMap(config => {
+        const url = `${config.serverUrl}/api/v1/todos`;
+        return this.httpClient.get<Todo[]>(url);
+      })
+    );
   }
 
   getTodo(todoId: string): Observable<DetailedTodo> {

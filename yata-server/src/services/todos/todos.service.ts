@@ -7,6 +7,6 @@ export class TodosService {
   constructor(private readonly todosRepository: TodosRepository) {}
 
   async getAll(): Promise<Todo[]> {
-    return [];
+    return this.todosRepository.getAllTodos();
   }
 }

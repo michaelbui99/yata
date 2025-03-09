@@ -3,6 +3,7 @@ import { ConfigService } from '../config/config.service';
 import { Db } from '../db/db';
 import { Uuid } from '../models/uuid';
 import { Optional } from '../optional';
+import { DetailedTodo } from '../models/todo';
 
 @Injectable()
 export class TodosRepository {
@@ -28,5 +29,15 @@ export class TodosRepository {
     );
 
     return Optional.of(result.lastID);
+  }
+
+  async getAllTodos(): Promise<DetailedTodo[]> {
+    const todoResults = await this.db.db.all(
+      'SELECT id, title, description, completed, creationDate, timeLogged FROM todos',
+    );
+
+    // TODO: Fetch tags and notes
+
+    return todoResults as DetailedTodo[];
   }
 }
