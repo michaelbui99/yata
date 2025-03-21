@@ -1,4 +1,4 @@
 export type Note = {
-  id: string;
+  id: number;
   contents: string;
 }

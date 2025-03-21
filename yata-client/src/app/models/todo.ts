@@ -3,7 +3,7 @@ import {Tag} from "./tag";
 export type Todo = Pick<DetailedTodo, "id" | "title" | "completed">
 
 export type DetailedTodo = {
-  id: string;
+  id: number;
   title: string;
   description: string;
   tags: Tag[];

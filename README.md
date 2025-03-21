@@ -30,6 +30,7 @@ classDiagram
     }
 
     class Note {
+        title
         markdownContent
     }
 ```

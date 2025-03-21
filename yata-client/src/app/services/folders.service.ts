@@ -14,7 +14,7 @@ export class FoldersService {
   constructor(private readonly configService: ConfigService, private readonly httpClient: HttpClient) {
   }
 
-  getFolder(folderId: string): Observable<Folder | undefined> {
+  getFolder(folderId: number): Observable<Folder | undefined> {
     return of(this.folders.find(folder => folder.id === folderId));
   }
 

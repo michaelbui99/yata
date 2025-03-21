@@ -30,7 +30,7 @@ export class TodosComponent implements OnInit {
       next: queryParams => {
         const folderId = queryParams.get("folder");
         if (folderId) {
-          this.initializeFromFolder(folderId);
+          this.initializeFromFolder(Number(folderId));
         } else {
           this.initializeDefault();
         }
@@ -47,7 +47,7 @@ export class TodosComponent implements OnInit {
     });
   }
 
-  private initializeFromFolder(folderId: string): void{
+  private initializeFromFolder(folderId: number): void {
     this.foldersService.getFolder(folderId).subscribe({
       next: folder => {
         this.title.set(folder ? folder.name : this.DEFAULT_TITLE);

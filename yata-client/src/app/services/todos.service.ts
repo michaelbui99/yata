@@ -12,7 +12,7 @@ export class TodosService {
   constructor(private readonly configService: ConfigService, private readonly httpClient: HttpClient) {
   }
 
-  getTodos(folder?: string, tag?: string): Observable<Todo[]> {
+  getTodos(folder?: number, tag?: string): Observable<Todo[]> {
     return this.configService.getConfig().pipe(
       switchMap(config => {
         const url = `${config.serverUrl}/api/v1/todos`;

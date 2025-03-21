@@ -26,15 +26,14 @@ export class SidemenuComponent implements OnInit {
   constructor(private readonly folderService: FoldersService, private readonly tagsService: TagsService) {
   }
 
-  async ngOnInit(): Promise<void>{
+  async ngOnInit(): Promise<void> {
     this.mainMenuItems.set([
       {
         id: "YATA_ALL_TODOS",
         label: "All TODOs",
         icon: PrimeIcons.LIST,
         routerLink: ["todos"],
-        queryParams:{
-        },
+        queryParams: {},
         queryParamsHandling: "replace"
       },
       {
@@ -74,7 +73,7 @@ export class SidemenuComponent implements OnInit {
         return {
           ...item,
           ...{
-            items: this.foldersToMenuItems(folders.filter(f => f.id !== "today"))
+            items: this.foldersToMenuItems(folders.filter(f => f.name !== "today"))
           }
         }
       }
@@ -82,7 +81,7 @@ export class SidemenuComponent implements OnInit {
     }));
   }
 
-  private fetchTags(){
+  private fetchTags() {
 
     this.tagsService.getTags().subscribe({
       next: tags => {
@@ -106,10 +105,10 @@ export class SidemenuComponent implements OnInit {
     });
   }
 
-  private tagsToMenuItems(tags: Tag[]) : MenuItem[]{
+  private tagsToMenuItems(tags: Tag[]): MenuItem[] {
     return tags.map(tag => {
       return {
-        id: `YATA_TAG:${tag.id}`,
+        id: `YATA_TAG:${tag.name}`,
         label: tag.name,
         icon: PrimeIcons.HASHTAG,
         style: {
@@ -117,7 +116,7 @@ export class SidemenuComponent implements OnInit {
         },
         routerLink: ["todos"],
         queryParams: {
-          tag: tag.id
+          tag: tag.name
         },
         queryParamsHandling: "merge"
       }
