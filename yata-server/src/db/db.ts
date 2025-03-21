@@ -55,7 +55,9 @@ export class Db {
     await this.db.exec(
       'CREATE TABLE IF NOT EXISTS todos (id TEXT PRIMARY KEY)',
     );
-    await this.db.exec('CREATE TABLE IF NOT EXISTS tags (id TEXT PRIMARY KEY)');
+    await this.db.exec(
+      'CREATE TABLE IF NOT EXISTS tags (name TEXT PRIMARY KEY)',
+    );
     await this.db.exec(
       'CREATE TABLE IF NOT EXISTS notes (id TEXT PRIMARY KEY, todo_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id))',
     );
@@ -67,7 +69,7 @@ export class Db {
       'CREATE TABLE IF NOT EXISTS folder_todos (folder_id TEXT, todo_id TEXT, FOREIGN KEY (folder_id) REFERENCES folders(id), FOREIGN KEY (todo_id) REFERENCES todos(id), PRIMARY KEY (folder_id, todo_id))',
     );
     await this.db.exec(
-      'CREATE TABLE IF NOT EXISTS todo_tags (todo_id TEXT, tag_id TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id), FOREIGN KEY (tag_id) REFERENCES tags(id), PRIMARY KEY (todo_id, tag_id))',
+      'CREATE TABLE IF NOT EXISTS todo_tags (todo_id TEXT, tag_name TEXT, FOREIGN KEY (todo_id) REFERENCES todos(id), FOREIGN KEY (tag_name) REFERENCES tags(name), PRIMARY KEY (todo_id, tag_name))',
     );
   }
 
@@ -89,9 +91,6 @@ export class Db {
       return 'ALTER TABLE todos ADD COLUMN timeLogged INTEGER default 0';
     });
 
-    await this.addColumnIdempotent('tags', 'name', () => {
-      return 'ALTER TABLE tags ADD COLUMN name TEXT default null';
-    });
     await this.addColumnIdempotent('tags', 'color', () => {
       return 'ALTER TABLE color ADD COLUMN color TEXT default null';
     });
