@@ -12,6 +12,9 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    implementation("io.quarkus:quarkus-flyway")
+    implementation("io.quarkus:quarkus-agroal")
+    implementation("io.quarkiverse.jdbc:quarkus-jdbc-sqlite:3.0.11")
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-arc")
