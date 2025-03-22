@@ -1,4 +1,4 @@
-package dk.michaelbui.yata.api.dtos;
+package dk.michaelbui.yata.api;
 
 public class ApiResponseBuilder {
     private final ApiResponse response;

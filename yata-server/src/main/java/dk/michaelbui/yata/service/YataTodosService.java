@@ -6,6 +6,8 @@ import io.quarkus.runtime.Startup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +29,16 @@ public class YataTodosService implements TodosService {
     @Override
     public List<Todo> getAll() {
         return this.todosRepository.getAll();
+    }
+
+    @Override
+    public Optional<Integer> create(Todo todo) {
+        todo.setCreationDate(OffsetDateTime.now(ZoneOffset.UTC));
+        todo.setTimeLogged(0);
+        todo.setCompleted(false);
+
+        // TODO: Fetch all tags and create the tags does not already exist.
+
+        return this.todosRepository.create(todo);
     }
 }

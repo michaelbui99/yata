@@ -16,6 +16,7 @@ val quarkusPlatformVersion: String by project
 val jooqVersion = "3.20.2"
 
 dependencies {
+    implementation("io.quarkus:quarkus-smallrye-openapi")
     implementation("io.quarkus:quarkus-flyway")
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkiverse.jdbc:quarkus-jdbc-sqlite:3.0.11")

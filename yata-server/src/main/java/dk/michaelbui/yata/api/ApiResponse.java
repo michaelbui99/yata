@@ -1,4 +1,4 @@
-package dk.michaelbui.yata.api.dtos;
+package dk.michaelbui.yata.api;
 
 import jakarta.ws.rs.core.Response;
 

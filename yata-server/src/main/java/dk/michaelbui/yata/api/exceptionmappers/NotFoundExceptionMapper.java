@@ -1,7 +1,7 @@
 package dk.michaelbui.yata.api.exceptionmappers;
 
-import dk.michaelbui.yata.api.dtos.ApiResponse;
-import dk.michaelbui.yata.api.dtos.ApiResponseBuilder;
+import dk.michaelbui.yata.api.ApiResponse;
+import dk.michaelbui.yata.api.ApiResponseBuilder;
 import dk.michaelbui.yata.exception.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;

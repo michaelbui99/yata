@@ -1,7 +1,6 @@
 package dk.michaelbui.yata.api.exceptionmappers;
 
-import dk.michaelbui.yata.api.dtos.ApiResponse;
-import dk.michaelbui.yata.api.dtos.ApiResponseBuilder;
+import dk.michaelbui.yata.api.ApiResponse;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -15,13 +14,10 @@ public class DefaultExceptionMapper implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(Exception e) {
         LOGGER.error(e.getMessage(), e);
-        ApiResponseBuilder apiResponse = ApiResponse.builder()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        return ApiResponse.builder()
+                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
+                .build()
+                .toResponse();
 
-        if (e.getMessage() != null && !e.getMessage().isBlank()) {
-            apiResponse.error(e.getMessage());
-        }
-
-        return apiResponse.build().toResponse();
     }
 }

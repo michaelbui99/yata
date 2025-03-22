@@ -19,4 +19,6 @@ public interface TodosService {
      * @return all created {@link Todo}s
      */
     List<Todo> getAll();
+
+    Optional<Integer> create(Todo todo);
 }

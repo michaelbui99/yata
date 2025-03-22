@@ -1,6 +1,7 @@
 package dk.michaelbui.yata.model;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public class Todo {
     private int id;
@@ -9,6 +10,7 @@ public class Todo {
     private boolean completed;
     private int timeLogged;
     private OffsetDateTime creationDate;
+    private List<Tag> tags;
 
     public int getId() {
         return id;
@@ -56,5 +58,13 @@ public class Todo {
 
     public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }
