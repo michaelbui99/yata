@@ -8,7 +8,7 @@ import {Tag} from '../../models/tag';
 import {TagsService} from '../../services/tags.service';
 import {PrimeIcons} from 'primeng/api';
 import {RouterLink} from '@angular/router';
-import {lastValueFrom} from 'rxjs';
+import {from, lastValueFrom} from 'rxjs';
 
 @Component({
   selector: 'yata-sidemenu',
@@ -30,21 +30,11 @@ export class SidemenuComponent implements OnInit {
     this.mainMenuItems.set([
       {
         id: "YATA_ALL_TODOS",
-        label: "All TODOs",
+        label: "TODOs",
         icon: PrimeIcons.LIST,
         routerLink: ["todos"],
         queryParams: {},
         queryParamsHandling: "replace"
-      },
-      {
-        id: "YATA_TODAY",
-        label: "Today",
-        icon: PrimeIcons.CALENDAR_CLOCK,
-        routerLink: ["todos"],
-        queryParams: {
-          folder: "today"
-        },
-        queryParamsHandling: "merge"
       },
       {
         id: "YATA_CALENDAR",
@@ -82,8 +72,7 @@ export class SidemenuComponent implements OnInit {
   }
 
   private fetchTags() {
-
-    this.tagsService.getTags().subscribe({
+    from(this.tagsService.getTags()).subscribe({
       next: tags => {
         this.tagsMenuItems.set(this.tagsToMenuItems(tags));
       }

@@ -4,6 +4,7 @@ import {DetailedTodo} from '../models/todo';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Chip} from 'primeng/chip';
 import {Tag} from '../models/tag';
+import {from} from 'rxjs';
 
 @Component({
   selector: 'yata-todo',
@@ -28,7 +29,7 @@ export class TodoComponent implements OnInit {
           return;
         }
 
-        this.todosService.getTodo(id).subscribe({
+        from(this.todosService.getTodo(id)).subscribe({
           next: todo => {
             this.todo.set(todo);
           }

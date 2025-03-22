@@ -3,30 +3,35 @@ import {Observable, of, switchMap} from 'rxjs';
 import {DetailedTodo, Todo} from '../models/todo';
 import {ConfigService} from './config.service';
 import {HttpClient} from '@angular/common/http';
+import {YataHttpService} from './yata-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodosService {
 
-  constructor(private readonly configService: ConfigService, private readonly httpClient: HttpClient) {
+  constructor(private readonly http: YataHttpService) {
   }
 
-  getTodos(folder?: number, tag?: string): Observable<Todo[]> {
-    return this.configService.getConfig().pipe(
-      switchMap(config => {
-        const url = `${config.serverUrl}/api/v1/todos`;
-        return this.httpClient.get<Todo[]>(url);
-      })
-    );
+  async getTodos(): Promise<Todo[]> {
+    const path = `api/v1/todos`;
+    const res = await this.http.get<Todo[]>(path);
+
+    if (res.data === undefined || res.data === null || res.error) {
+      console.error("Failed to fetch todos", res);
+    }
+
+    return res.data!;
   }
 
-  getTodo(todoId: string): Observable<DetailedTodo> {
-    return this.configService.getConfig().pipe(
-      switchMap(config => {
-        const url = `${config.serverUrl}/api/v1/todos/${todoId}`;
-        return this.httpClient.get<DetailedTodo>(url);
-      })
-    );
+  async getTodo(todoId: string): Promise<DetailedTodo> {
+    const path = `api/v1/todos/${todoId}`;
+    const res = await this.http.get<DetailedTodo>(path);
+
+    if (!res.data || res.error){
+      console.error("Failed to fetch todo", res);
+    }
+
+    return res.data!;
   }
 }

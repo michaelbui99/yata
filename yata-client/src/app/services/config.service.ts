@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ClientConfig} from '../models/client-config';
 import {HttpClient} from '@angular/common/http';
-import {lastValueFrom, Observable, of, switchMap} from 'rxjs';
+import {Observable, of, switchMap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +14,13 @@ export class ConfigService {
 
   getConfig(): Observable<ClientConfig> {
     if (!this.clientConfig) {
-      this.httpClient.get<ClientConfig>('/config.json').pipe(
-        switchMap(config => {
-          this.clientConfig = config;
-          return of(config);
-        })
-      );
+      // this.httpClient.get<ClientConfig | undefined>('/config.json').pipe(
+      //   switchMap(config => {
+      //     this.clientConfig = config ?? {serverUrl: "http://localhost:8080"};
+      //     return of(config);
+      //   })
+      // );
+      this.clientConfig = {serverUrl: "http://yata-server.michaelbui.dk:8080"};
     }
     return of(this.clientConfig!);
   }

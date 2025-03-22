@@ -2,9 +2,10 @@ import {Component, computed, OnInit, Signal, signal, WritableSignal} from '@angu
 import {ActivatedRoute} from '@angular/router';
 import {FoldersService} from '../services/folders.service';
 import {Todo} from '../models/todo';
-import {firstValueFrom, lastValueFrom} from 'rxjs';
+import {firstValueFrom, from, lastValueFrom} from 'rxjs';
 import {TodosService} from '../services/todos.service';
 import {TodoListItemComponent} from '../components/todo-list-item/todo-list-item.component';
+import {StateStoreService} from '../services/state-store.service';
 
 @Component({
   selector: 'yata-todos',
@@ -18,45 +19,15 @@ export class TodosComponent implements OnInit {
   private readonly DEFAULT_TITLE = "TODOs";
 
   title: WritableSignal<string> = signal(this.DEFAULT_TITLE);
-  todos: WritableSignal<Todo[]> = signal([]);
+  todos: WritableSignal<Todo[]>;
   completedTodosCount: Signal<number> = computed(() => this.todos().filter(todo => todo.completed).length)
   totalTodosCount: Signal<number> = computed(() => this.todos().length)
 
-  constructor(private readonly route: ActivatedRoute, private readonly foldersService: FoldersService, private readonly todosService: TodosService) {
+  constructor(private readonly stateStore: StateStoreService) {
+    this.todos = stateStore.state.todos.todos;
+    stateStore.state.todos.fetchTodos();
   }
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe({
-      next: queryParams => {
-        const folderId = queryParams.get("folder");
-        if (folderId) {
-          this.initializeFromFolder(Number(folderId));
-        } else {
-          this.initializeDefault();
-        }
-      }
-    })
-  }
-
-  private initializeDefault(): void {
-    this.title.set(this.DEFAULT_TITLE);
-    this.todosService.getTodos().subscribe({
-      next: todos => {
-        this.todos.set(todos);
-      }
-    });
-  }
-
-  private initializeFromFolder(folderId: number): void {
-    this.foldersService.getFolder(folderId).subscribe({
-      next: folder => {
-        this.title.set(folder ? folder.name : this.DEFAULT_TITLE);
-        this.todosService.getTodos(folderId).subscribe({
-          next: todos => {
-            this.todos.set(todos);
-          }
-        });
-      }
-    });
   }
 }
