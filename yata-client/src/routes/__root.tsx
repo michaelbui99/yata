@@ -1,20 +1,14 @@
-import {createRootRoute, Link, Outlet} from "@tanstack/react-router";
-import {TanStackRouterDevtools} from "@tanstack/react-router-devtools";
+import {Group} from "@mantine/core";
+import {createRootRoute, Outlet} from "@tanstack/react-router";
+import {Navbar} from "../components/Navbar/Navbar.tsx";
 
 export const rootRoute = createRootRoute({
     component: () => (
         <>
-            <div className="p-2 flex gap-2">
-                <Link to="/" className="[&.active]:font-bold">
-                    Home
-                </Link>{' '}
-                <Link to="/about" className="[&.active]:font-bold">
-                    About
-                </Link>
-            </div>
-            <hr/>
-            <Outlet/>
-            <TanStackRouterDevtools/>
+            <Group>
+                <Navbar/>
+                <Outlet/>
+            </Group>
         </>
     ),
 })

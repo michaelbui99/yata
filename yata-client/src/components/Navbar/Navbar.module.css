@@ -1,0 +1,12 @@
+.title{
+
+}
+
+h1 {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+h1:hover {
+    opacity: 0.7;
+}
