@@ -1,5 +1,3 @@
-import org.jooq.tools.jdbc.JDBCUtils
-
 plugins {
     id("io.quarkus")
     id("org.jooq.jooq-codegen-gradle") version "3.20.2"
@@ -13,7 +11,6 @@ repositories {
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
-val jooqVersion = "3.20.2"
 
 dependencies {
     implementation("io.quarkus:quarkus-smallrye-openapi")
@@ -24,10 +21,11 @@ dependencies {
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-rest")
-    implementation("org.jooq:jooq:${jooqVersion}")
+    implementation(libs.jooq)
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    testImplementation(libs.mockito)
 
     jooqCodegen("org.xerial:sqlite-jdbc:3.49.1.0")
 }
@@ -40,15 +38,15 @@ java {
     targetCompatibility = JavaVersion.VERSION_21
 }
 
-jooq{
-    configuration{
+jooq {
+    configuration {
         jdbc {
             driver = "org.sqlite.JDBC"
             url = "jdbc:sqlite:${System.getProperty("user.home")}/yata/yata.db"
         }
 
         generator {
-            database{
+            database {
                 name = "org.jooq.meta.sqlite.SQLiteDatabase"
             }
 

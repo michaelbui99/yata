@@ -1,5 +1,6 @@
 package dk.michaelbui.yata.data;
 
+import dk.michaelbui.yata.generated.tables.Tags;
 import dk.michaelbui.yata.generated.tables.TodoTags;
 import dk.michaelbui.yata.generated.tables.Todos;
 import dk.michaelbui.yata.generated.tables.records.TodosRecord;
@@ -8,6 +9,7 @@ import dk.michaelbui.yata.model.Todo;
 import io.quarkus.runtime.Startup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jooq.Record;
 import org.jooq.Record1;
 import org.jooq.Result;
 
@@ -46,6 +48,22 @@ public class YataTodosRepository implements TodosRepository {
         if (todoRecord.getCreationDate() != null && !todoRecord.getCreationDate().isBlank()) {
             todo.setCreationDate(OffsetDateTime.parse(todoRecord.getCreationDate()));
         }
+
+        Result<Record> tagRecords = dslProvider
+                .getDsl()
+                .select()
+                .from(TodoTags.TODO_TAGS)
+                .join(Tags.TAGS)
+                .on(TodoTags.TODO_TAGS.TAG_NAME.eq(Tags.TAGS.NAME))
+                .where(TodoTags.TODO_TAGS.TODO_ID.eq(id))
+                .fetch();
+
+        List<Tag> tags = tagRecords
+                .map(t -> new Tag(t.get(Tags.TAGS.NAME), t.get(Tags.TAGS.COLOR)))
+                .stream()
+                .toList();
+        todo.setTags(tags);
+
         return todo;
     }
 
