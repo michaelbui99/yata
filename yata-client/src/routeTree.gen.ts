@@ -11,11 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TodosImport } from './routes/todos'
 import { Route as RoutingImport } from './routes/routing'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const TodosRoute = TodosImport.update({
+  id: '/todos',
+  path: '/todos',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const RoutingRoute = RoutingImport.update({
   id: '/routing',
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutingImport
       parentRoute: typeof rootRoute
     }
+    '/todos': {
+      id: '/todos'
+      path: '/todos'
+      fullPath: '/todos'
+      preLoaderRoute: typeof TodosImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -69,12 +83,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/routing': typeof RoutingRoute
+  '/todos': typeof TodosRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/routing': typeof RoutingRoute
+  '/todos': typeof TodosRoute
 }
 
 export interface FileRoutesById {
@@ -82,14 +98,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/routing': typeof RoutingRoute
+  '/todos': typeof TodosRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/routing'
+  fullPaths: '/' | '/about' | '/routing' | '/todos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/routing'
-  id: '__root__' | '/' | '/about' | '/routing'
+  to: '/' | '/about' | '/routing' | '/todos'
+  id: '__root__' | '/' | '/about' | '/routing' | '/todos'
   fileRoutesById: FileRoutesById
 }
 
@@ -97,12 +114,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   RoutingRoute: typeof RoutingRoute
+  TodosRoute: typeof TodosRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   RoutingRoute: RoutingRoute,
+  TodosRoute: TodosRoute,
 }
 
 export const routeTree = rootRoute
@@ -117,7 +136,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/routing"
+        "/routing",
+        "/todos"
       ]
     },
     "/": {
@@ -128,6 +148,9 @@ export const routeTree = rootRoute
     },
     "/routing": {
       "filePath": "routing.ts"
+    },
+    "/todos": {
+      "filePath": "todos.tsx"
     }
   }
 }

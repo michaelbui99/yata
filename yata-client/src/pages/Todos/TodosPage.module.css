@@ -1,7 +1,4 @@
-.title{
+.todoRow {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-}
-.title:hover {
-    opacity: 0.7;
 }

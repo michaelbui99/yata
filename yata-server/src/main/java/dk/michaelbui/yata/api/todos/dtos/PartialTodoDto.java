@@ -4,6 +4,8 @@ import dk.michaelbui.yata.model.Todo;
 
 public class PartialTodoDto {
     private String title;
+    private String description;
+    private int timeLogged;
     private boolean completed;
     private int id;
 
@@ -31,11 +33,29 @@ public class PartialTodoDto {
         return id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getTimeLogged() {
+        return timeLogged;
+    }
+
+    public void setTimeLogged(int timeLogged) {
+        this.timeLogged = timeLogged;
+    }
+
     public static PartialTodoDto fromTodo(Todo todo) {
         PartialTodoDto p = new PartialTodoDto();
         p.setId(todo.getId());
         p.setTitle(todo.getTitle());
         p.setCompleted(todo.getCompleted());
+        p.setDescription(todo.getDescription());
+        p.setTimeLogged(todo.getTimeLogged());
         return p;
     }
 }

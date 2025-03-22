@@ -1,14 +1,18 @@
-import {Group} from "@mantine/core";
+import {Grid} from "@mantine/core";
 import {createRootRoute, Outlet} from "@tanstack/react-router";
 import {Navbar} from "../components/Navbar/Navbar.tsx";
 
 export const rootRoute = createRootRoute({
     component: () => (
         <>
-            <Group>
-                <Navbar/>
-                <Outlet/>
-            </Group>
+            <Grid>
+                <Grid.Col span={2}>
+                    <Navbar/>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                    <Outlet/>
+                </Grid.Col>
+            </Grid>
         </>
     ),
 })

@@ -1,0 +1,7 @@
+{
+  "api": {
+    "protocol": "http",
+    "host": "yata-server.michaelbui.dk",
+    "port": 8080
+  }
+}
