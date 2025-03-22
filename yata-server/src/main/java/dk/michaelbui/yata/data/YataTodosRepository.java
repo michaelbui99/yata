@@ -71,7 +71,7 @@ public class YataTodosRepository implements TodosRepository {
     public List<Todo> getAll() {
         Result<TodosRecord> result = dslProvider
                 .getDsl()
-                .select(Todos.TODOS.ID, Todos.TODOS.TITLE, Todos.TODOS.COMPLETED)
+                .select(Todos.TODOS.ID, Todos.TODOS.TITLE, Todos.TODOS.COMPLETED, Todos.TODOS.DESCRIPTION, Todos.TODOS.TIME_LOGGED, Todos.TODOS.CREATION_DATE)
                 .from(Todos.TODOS)
                 .fetchInto(Todos.TODOS);
 
@@ -83,6 +83,9 @@ public class YataTodosRepository implements TodosRepository {
                     todo.setId(res.getId());
                     todo.setCompleted(res.getCompleted());
                     todo.setTitle(res.getTitle());
+                    todo.setDescription(res.getDescription());
+                    todo.setTimeLogged(res.getTimeLogged());
+                    todo.setCreationDate(OffsetDateTime.parse(res.getCreationDate()));
                     return todo;
                 })
                 .toList();
