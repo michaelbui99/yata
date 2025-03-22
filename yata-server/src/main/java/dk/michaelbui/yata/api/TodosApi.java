@@ -2,6 +2,7 @@ package dk.michaelbui.yata.api;
 
 import dk.michaelbui.yata.api.dtos.ApiResponse;
 import dk.michaelbui.yata.api.dtos.PartialTodo;
+import dk.michaelbui.yata.exception.NotFoundException;
 import dk.michaelbui.yata.model.Todo;
 import dk.michaelbui.yata.service.TodosService;
 import io.quarkus.runtime.Startup;
@@ -17,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 
 @Singleton
 @Startup
@@ -36,24 +36,15 @@ public class TodosApi {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id) {
-        try {
-            Optional<Todo> todo = todosService.getById(id);
-            if (todo.isEmpty()) {
-                return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(
-                                ApiResponse
-                                        .notFound()
-                                        .error(String.format("Todo with id '%s' does not exist", id))
-                                        .build()
-                        )
-                        .build();
-            }
-            return Response.ok(ApiResponse.ok(todo).build()).build();
-        } catch (Exception e) {
-            LOGGER.error("Failed to fetch todo with id '{}'", id, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
+        Todo todo = todosService
+                .getById(id)
+                .orElseThrow(
+                        () -> new NotFoundException(String.format("Todo with id '%s' does not exist", id))
+                );
+        return ApiResponse
+                .ok(todo)
+                .build()
+                .toResponse();
     }
 
     @GET
@@ -62,13 +53,7 @@ public class TodosApi {
         try {
             List<PartialTodo> todos = this.todosService.getAll()
                     .stream()
-                    .map(todo -> {
-                        PartialTodo p = new PartialTodo();
-                        p.setTitle(todo.getTitle());
-                        p.setId(todo.getId());
-                        p.setCompleted(todo.getCompleted());
-                        return p;
-                    })
+                    .map(PartialTodo::fromTodo)
                     .toList();
             return Response.ok(ApiResponse.ok(todos).build()).build();
         } catch (Exception e) {

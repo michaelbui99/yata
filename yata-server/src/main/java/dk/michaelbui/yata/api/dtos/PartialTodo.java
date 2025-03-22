@@ -1,5 +1,7 @@
 package dk.michaelbui.yata.api.dtos;
 
+import dk.michaelbui.yata.model.Todo;
+
 public class PartialTodo {
     private String title;
     private boolean completed;
@@ -27,5 +29,13 @@ public class PartialTodo {
 
     public int getId() {
         return id;
+    }
+
+    public static PartialTodo fromTodo(Todo todo) {
+        PartialTodo p = new PartialTodo();
+        p.setId(todo.getId());
+        p.setTitle(todo.getTitle());
+        p.setCompleted(todo.getCompleted());
+        return p;
     }
 }

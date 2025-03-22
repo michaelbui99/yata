@@ -1,5 +1,7 @@
 package dk.michaelbui.yata.api.dtos;
 
+import jakarta.ws.rs.core.Response;
+
 public class ApiResponse {
     private Object data;
     private String error;
@@ -39,5 +41,12 @@ public class ApiResponse {
 
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public Response toResponse() {
+        return Response
+                .status(Response.Status.fromStatusCode(getStatusCode()))
+                .entity(this)
+                .build();
     }
 }
